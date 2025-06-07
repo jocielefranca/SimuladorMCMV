@@ -282,6 +282,31 @@
             font-size: 0.8em;
             color: #666;
         }
+        
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-grid, .distribution-chart {
+                grid-template-columns: 1fr;
+            }
+            
+            .risk-analysis {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -390,15 +415,15 @@
                 
                 <div class="kpi-grid">
                     <div class="kpi-card">
-                        <div class="kpi-value" id="vgvTotal">R$ 0M</div>
+                        <div class="kpi-value" id="vgvTotal">R$ 72.0M</div>
                         <div class="kpi-label">VGV Total</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-value" id="margemLiquida">0%</div>
+                        <div class="kpi-value" id="margemLiquida">18.0%</div>
                         <div class="kpi-label">Margem Líquida</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-value" id="lucroLiquido">R$ 0M</div>
+                        <div class="kpi-value" id="lucroLiquido">R$ 12.96M</div>
                         <div class="kpi-label">Lucro Líquido</div>
                     </div>
                 </div>
@@ -407,19 +432,19 @@
                     <div class="chart-title">Distribuição por Faixa MCMV</div>
                     <div class="distribution-chart">
                         <div class="distribution-item">
-                            <div class="distribution-value" id="unidadesFaixa15">0</div>
+                            <div class="distribution-value" id="unidadesFaixa15">208</div>
                             <div class="distribution-label">Faixa 1.5<br>R$ 2.640-4.400</div>
                         </div>
                         <div class="distribution-item">
-                            <div class="distribution-value" id="unidadesFaixa2">0</div>
+                            <div class="distribution-value" id="unidadesFaixa2">96</div>
                             <div class="distribution-label">Faixa 2<br>R$ 4.400-8.000</div>
                         </div>
                         <div class="distribution-item">
-                            <div class="distribution-value" id="unidadesFaixa3">0</div>
+                            <div class="distribution-value" id="unidadesFaixa3">16</div>
                             <div class="distribution-label">Faixa 3<br>R$ 8.000-10.000</div>
                         </div>
                         <div class="distribution-item">
-                            <div class="distribution-value" id="tempoVenda">0</div>
+                            <div class="distribution-value" id="tempoVenda">13</div>
                             <div class="distribution-label">Meses para<br>Venda Total</div>
                         </div>
                     </div>
@@ -428,7 +453,31 @@
                 <div class="chart-container">
                     <div class="chart-title">Cronograma de Recebimentos</div>
                     <div class="flow-timeline" id="cronogramaRecebimentos">
-                        <!-- Será preenchido dinamicamente -->
+                        <div class="flow-item">
+                            <div class="flow-period">0-13 meses</div>
+                            <div class="flow-desc">Entradas + Moradia Ceará</div>
+                            <div class="flow-value">R$ 10.880.000</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-period">4-9 meses</div>
+                            <div class="flow-desc">1ª e 2ª Liberação CEF</div>
+                            <div class="flow-value">R$ 30.560.000</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-period">9-15 meses</div>
+                            <div class="flow-desc">3ª Liberação CEF</div>
+                            <div class="flow-value">R$ 18.336.000</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-period">15-22 meses</div>
+                            <div class="flow-desc">Liberação Final CEF</div>
+                            <div class="flow-value">R$ 12.224.000</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-period">4-22 meses</div>
+                            <div class="flow-desc">Subsídios MCMV</div>
+                            <div class="flow-value">R$ 15.200.000</div>
+                        </div>
                     </div>
                 </div>
                 
@@ -436,34 +485,41 @@
                     <div class="risk-card">
                         <div class="risk-title">Risco de Inadimplência</div>
                         <div class="risk-meter">
-                            <div class="risk-fill" id="riskInadimplencia"></div>
+                            <div class="risk-fill risk-medium" id="riskInadimplencia" style="width: 55%"></div>
                         </div>
-                        <div>Impacto: R$ <span id="impactoInadimplencia">0</span></div>
+                        <div>Impacto: R$ <span id="impactoInadimplencia">1.84M</span></div>
                     </div>
                     <div class="risk-card">
                         <div class="risk-title">Risco de Distrato</div>
                         <div class="risk-meter">
-                            <div class="risk-fill" id="riskDistrato"></div>
+                            <div class="risk-fill risk-low" id="riskDistrato" style="width: 33%"></div>
                         </div>
-                        <div>Impacto: R$ <span id="impactoDistrato">0</span></div>
+                        <div>Impacto: R$ <span id="impactoDistrato">0.72M</span></div>
                     </div>
                 </div>
                 
-                <div id="alertasGerais"></div>
+                <div id="alertasGerais">
+                    <div class="alert alert-success">
+                        ✅ ÓTIMO: Margem líquida dentro ou acima da meta estabelecida!
+                    </div>
+                    <div class="alert alert-warning">
+                        ⚠️ CUIDADO: Risco de inadimplência moderado. Monitorar perfil dos clientes.
+                    </div>
+                </div>
                 
                 <div class="chart-container full-width">
                     <div class="chart-title">Fluxo de Caixa Acumulado</div>
                     <div class="kpi-grid">
                         <div class="kpi-card">
-                            <div class="kpi-value" id="totalEntradas">R$ 0M</div>
+                            <div class="kpi-value" id="totalEntradas">R$ 10.88M</div>
                             <div class="kpi-label">Entradas + Moradia CE</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-value" id="totalFinanciamento">R$ 0M</div>
+                            <div class="kpi-value" id="totalFinanciamento">R$ 61.12M</div>
                             <div class="kpi-label">Financiamento CEF</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-value" id="totalSubsidios">R$ 0M</div>
+                            <div class="kpi-value" id="totalSubsidios">R$ 15.20M</div>
                             <div class="kpi-label">Subsídios MCMV</div>
                         </div>
                     </div>
@@ -481,6 +537,11 @@
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             }).format(valor);
+        }
+        
+        // Função para formatar valores em milhões
+        function formatarMilhoes(valor) {
+            return `R$ ${(valor / 1000000).toFixed(2)}M`;
         }
 
         function calcularEmpreendimento() {
@@ -523,7 +584,7 @@
             const unidadesFaixa3 = Math.round(dados.totalUnidades * dados.percFaixa3 / 100);
             
             // Tempo de venda
-            const tempoVendaTotal = Math.ceil(dados.totalUnidades / (dados.totalUnidades * dados.velocidadeVenda / 100));
+            const tempoVendaTotal = Math.ceil(100 / dados.velocidadeVenda);
             
             // Estrutura financeira
             const valorEntradaConstrutora = dados.valorAvaliacao * (dados.entradaConstrutora / 100);
@@ -538,6 +599,7 @@
                 3: 18   // Faixa 3 maior risco
             };
             
+            // Cálculo do risco ponderado
             const riscoInadimplencia = (
                 (unidadesFaixa15 * riscoPorFaixa[1.5] + 
                  unidadesFaixa2 * riscoPorFaixa[2] + 
@@ -596,11 +658,11 @@
             const cronograma = [];
             
             // Entradas (distribuídas ao longo do período de vendas)
-            const tempoVenda = Math.ceil(dados.totalUnidades / (dados.totalUnidades * dados.velocidadeVenda / 100));
-            const entradaPorMes = totalEntradas / Math.min(tempoVenda, dados.prazoEntrada);
+            const tempoVenda = Math.ceil(100 / dados.velocidadeVenda);
+            const prazoEntrada = Math.min(tempoVenda, dados.prazoEntrada);
             
             cronograma.push({
-                periodo: `0-${Math.min(tempoVenda, dados.prazoEntrada)} meses`,
+                periodo: `0-${prazoEntrada} meses`,
                 descricao: "Entradas + Moradia Ceará",
                 valor: totalEntradas,
                 tipo: "entrada"
@@ -635,9 +697,9 @@
         
         function atualizarInterface(analise) {
             // KPIs principais
-            document.getElementById('vgvTotal').textContent = `R$ ${(analise.vgvTotal / 1000000).toFixed(1)}M`;
+            document.getElementById('vgvTotal').textContent = formatarMilhoes(analise.vgvTotal);
             document.getElementById('margemLiquida').textContent = `${analise.margemLiquida.toFixed(1)}%`;
-            document.getElementById('lucroLiquido').textContent = `R$ ${(analise.lucroLiquido / 1000000).toFixed(1)}M`;
+            document.getElementById('lucroLiquido').textContent = formatarMilhoes(analise.lucroLiquido);
             
             // Distribuição por faixa
             document.getElementById('unidadesFaixa15').textContent = analise.unidadesFaixa15;
@@ -646,9 +708,9 @@
             document.getElementById('tempoVenda').textContent = analise.tempoVendaTotal;
             
             // Totais por fonte
-            document.getElementById('totalEntradas').textContent = `R$ ${(analise.totalEntradas / 1000000).toFixed(1)}M`;
-            document.getElementById('totalFinanciamento').textContent = `R$ ${(analise.totalFinanciamento / 1000000).toFixed(1)}M`;
-            document.getElementById('totalSubsidios').textContent = `R$ ${(analise.totalSubsidios / 1000000).toFixed(1)}M`;
+            document.getElementById('totalEntradas').textContent = formatarMilhoes(analise.totalEntradas);
+            document.getElementById('totalFinanciamento').textContent = formatarMilhoes(analise.totalFinanciamento);
+            document.getElementById('totalSubsidios').textContent = formatarMilhoes(analise.totalSubsidios);
             
             // Riscos
             const riskInad = document.getElementById('riskInadimplencia');
@@ -673,8 +735,8 @@
                 riskDist.className = 'risk-fill risk-high';
             }
             
-            document.getElementById('impactoInadimplencia').textContent = (analise.impactoInadimplencia / 1000000).toFixed(1) + 'M';
-            document.getElementById('impactoDistrato').textContent = (analise.impactoDistrato / 1000000).toFixed(1) + 'M';
+            document.getElementById('impactoInadimplencia').textContent = (analise.impactoInadimplencia / 1000000).toFixed(2) + 'M';
+            document.getElementById('impactoDistrato').textContent = (analise.impactoDistrato / 1000000).toFixed(2) + 'M';
             
             // Cronograma
             const cronogramaContainer = document.getElementById('cronogramaRecebimentos');
@@ -731,6 +793,15 @@
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
                 alerta.innerHTML = `⏳ VENDAS LENTAS: Projeção de ${analise.tempoVendaTotal} meses para venda total. Revisar estratégia comercial!`;
+                alertasContainer.appendChild(alerta);
+            }
+            
+            // Alerta de score médio baixo
+            const dados = capturarDados();
+            if (dados.scoreMedia < 550) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-warning';
+                alerta.innerHTML = '⚠️ SCORE BAIXO: Score médio dos clientes abaixo do recomendado. Avaliar risco de crédito.';
                 alertasContainer.appendChild(alerta);
             }
         }
