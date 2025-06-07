@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador MCMV - Análise de Riscos e Carteira</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+        
+        .simulator-panel {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .results-panel {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .risk-heatmap {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .risk-cell {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8em;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .risk-cell:hover {
+            transform: scale(1.1);
+        }
+        
+        .risk-low { background: #27ae60; }
+        .risk-medium-low { background: #f39c12; }
+        .risk-medium { background: #e67e22; }
+        .risk-medium-high { background: #e74c3c; }
+        .risk-high { background: #8e44ad; }
+        
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .result-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+        
+        .result-desc {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #856404;
+        }
+        
+        .critical {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #721c24;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #155724;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .flow-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .flow-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .flow-period {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .flow-value {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85em;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Simulador MCMV Completo</h1>
+            <p>Análise de Riscos, VSO e Fluxo de Recebíveis</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Painel de Simulação -->
+            <div class="simulator-panel">
+                <h2 class="section-title">📊 Parâmetros da Simulação</h2>
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Valor da Unidade (R$)</label>
+                        <input type="number" id="valorUnidade" value="225000" placeholder="Ex: 225000">
+                    </div>
+                    <div class="input-group">
+                        <label>Renda Familiar (R$)</label>
+                        <input type="number" id="rendaFamiliar" value="4500" placeholder="Ex: 4500">
+                    </div>
+                    <div class="input-group">
+                        <label>VSO (%)</label>
+                        <input type="number" id="vso" value="32" placeholder="Ex: 32" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Entrada Construtora (%)</label>
+                        <input type="number" id="entradaConstrutora" value="10" placeholder="Ex: 10">
+                    </div>
+                    <div class="input-group">
+                        <label>Subsídio Moradia (R$)</label>
+                        <input type="number" id="subsidioMoradia" value="20000" placeholder="Ex: 20000">
+                    </div>
+                    <div class="input-group">
+                        <label>Duração Obra (meses)</label>
+                        <input type="number" id="duracaoObra" value="22" placeholder="Ex: 22">
+                    </div>
+                    <div class="input-group">
+                        <label>Taxa Juros Obra (% a.a.)</label>
+                        <input type="number" id="taxaJurosObra" value="12" placeholder="Ex: 12" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Taxa Juros Financiamento (% a.a.)</label>
+                        <input type="number" id="taxaJurosFinanciamento" value="5.5" placeholder="Ex: 5.5" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Prazo Financiamento (anos)</label>
+                        <input type="number" id="prazoFinanciamento" value="30" placeholder="Ex: 30">
+                    </div>
+                    <div class="input-group">
+                        <label>Score Médio do Cliente</label>
+                        <select id="scoreMedio">
+                            <option value="300">Baixo (300-400)</option>
+                            <option value="500" selected>Médio (400-600)</option>
+                            <option value="700">Alto (600-850)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="calcularSimulacao()">🚀 Calcular Simulação</button>
+                
+                <div class="chart-container">
+                    <h3>Mapa de Calor - Risco de Inadimplência</h3>
+                    <div class="risk-heatmap" id="riskHeatmap">
+                        <!-- Células serão geradas dinamicamente -->
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color risk-low"></div>
+                            <span>Baixo (< 5%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color risk-medium-low"></div>
+                            <span>Médio-Baixo (5-10%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color risk-medium"></div>
+                            <span>Médio (10-15%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color risk-medium-high"></div>
+                            <span>Médio-Alto (15-25%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color risk-high"></div>
+                            <span>Alto (> 25%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Painel de Resultados -->
+            <div class="results-panel">
+                <h2 class="section-title">📈 Resultados da Simulação</h2>
+                
+                <div class="result-card">
+                    <div class="result-title">Comprometimento de Renda na Obra</div>
+                    <div class="result-value" id="comprometimentoObra">0%</div>
+                    <div class="result-desc">Parcela entrada + juros de obra vs. renda familiar</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">Comprometimento Pós-Obra</div>
+                    <div class="result-value" id="comprometimentoPosObra">0%</div>
+                    <div class="result-desc">Prestação final vs. renda familiar</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">Risco de Inadimplência</div>
+                    <div class="result-value" id="riscoInadimplencia">0%</div>
+                    <div class="result-desc">Baseado em renda, score e comprometimento</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">Valor de Avaliação CEF</div>
+                    <div class="result-value" id="avaliacaoCEF">R$ 0</div>
+                    <div class="result-desc">Estimativa baseada em padrões regionais</div>
+                </div>
+                
+                <div id="alertaRisco"></div>
+                
+                <div class="chart-container">
+                    <h3>Fluxo de Recebíveis (24 meses)</h3>
+                    <div class="flow-timeline" id="fluxoRecebíveis">
+                        <!-- Timeline será gerada dinamicamente -->
+                    </div>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="parcelaObra">R$ 0</div>
+                        <div class="metric-label">Parcela na Obra</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="prestacaoFinal">R$ 0</div>
+                        <div class="metric-label">Prestação Final</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="totalJuros">R$ 0</div>
+                        <div class="metric-label">Total de Juros</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="financiamentoCEF">R$ 0</div>
+                        <div class="metric-label">Financiamento CEF</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function calcularSimulacao() {
+            // Capturar valores dos inputs
+            const valorUnidade = parseFloat(document.getElementById('valorUnidade').value) || 225000;
+            const rendaFamiliar = parseFloat(document.getElementById('rendaFamiliar').value) || 4500;
+            const vso = parseFloat(document.getElementById('vso').value) || 32;
+            const entradaConstrutora = parseFloat(document.getElementById('entradaConstrutora').value) || 10;
+            const subsidioMoradia = parseFloat(document.getElementById('subsidioMoradia').value) || 20000;
+            const duracaoObra = parseFloat(document.getElementById('duracaoObra').value) || 22;
+            const taxaJurosObra = parseFloat(document.getElementById('taxaJurosObra').value) || 12;
+            const taxaJurosFinanciamento = parseFloat(document.getElementById('taxaJurosFinanciamento').value) || 5.5;
+            const prazoFinanciamento = parseFloat(document.getElementById('prazoFinanciamento').value) || 30;
+            const scoreMedio = parseFloat(document.getElementById('scoreMedio').value) || 500;
+            
+            // Cálculos principais
+            const valorEntrada = valorUnidade * (entradaConstrutora / 100);
+            const parcelasEntrada = Math.ceil(duracaoObra * 1.2); // Geralmente mais que a obra
+            const valorParcelaEntrada = valorEntrada / parcelasEntrada;
+            
+            // Valor a financiar
+            const valorFinanciamento = valorUnidade - valorEntrada - subsidioMoradia;
+            
+            // Juros durante a obra (sobre valor financiado)
+            const jurosObra = (valorFinanciamento * (taxaJurosObra / 100) * (duracaoObra / 12));
+            const valorComJuros = valorFinanciamento + jurosObra;
+            
+            // Prestação pós-obra (Price)
+            const taxaMensal = (taxaJurosFinanciamento / 100) / 12;
+            const numParcelas = prazoFinanciamento * 12;
+            const prestacaoFinal = valorComJuros * (taxaMensal * Math.pow(1 + taxaMensal, numParcelas)) / (Math.pow(1 + taxaMensal, numParcelas) - 1);
+            
+            // Comprometimentos
+            const comprometimentoObra = ((valorParcelaEntrada) / rendaFamiliar) * 100;
+            const comprometimentoPosObra = (prestacaoFinal / rendaFamiliar) * 100;
+            
+            // Cálculo de risco (fórmula empírica baseada em dados do mercado)
+            let riscoBase = 5; // Base 5%
+            
+            // Fatores de risco
+            if (comprometimentoObra > 30) riscoBase += 8;
+            else if (comprometimentoObra > 25) riscoBase += 5;
+            else if (comprometimentoObra > 20) riscoBase += 2;
+            
+            if (comprometimentoPosObra > 30) riscoBase += 10;
+            else if (comprometimentoPosObra > 25) riscoBase += 6;
+            else if (comprometimentoPosObra > 20) riscoBase += 3;
+            
+            if (rendaFamiliar < 3000) riscoBase += 8;
+            else if (rendaFamiliar < 4000) riscoBase += 4;
+            
+            if (scoreMedio < 400) riscoBase += 15;
+            else if (scoreMedio < 600) riscoBase += 8;
+            else if (scoreMedio > 700) riscoBase -= 3;
+            
+            if (vso > 35) riscoBase += 5;
+            else if (vso < 25) riscoBase += 3;
+            
+            const riscoFinal = Math.max(1, Math.min(40, riscoBase));
+            
+            // Avaliação CEF (geralmente 10-15% abaixo do valor de venda)
+            const avaliacaoCEF = valorUnidade * 0.88;
+            
+            // Atualizar interface
+            document.getElementById('comprometimentoObra').textContent = comprometimentoObra.toFixed(1) + '%';
+            document.getElementById('comprometimentoPosObra').textContent = comprometimentoPosObra.toFixed(1) + '%';
+            document.getElementById('riscoInadimplencia').textContent = riscoFinal.toFixed(1) + '%';
+            document.getElementById('avaliacaoCEF').textContent = 'R$ ' + avaliacaoCEF.toLocaleString('pt-BR');
+            
+            document.getElementById('parcelaObra').textContent = 'R$ ' + valorParcelaEntrada.toLocaleString('pt-BR');
+            document.getElementById('prestacaoFinal').textContent = 'R$ ' + prestacaoFinal.toLocaleString('pt-BR');
+            document.getElementById('totalJuros').textContent = 'R$ ' + jurosObra.toLocaleString('pt-BR');
+            document.getElementById('financiamentoCEF').textContent = 'R$ ' + valorFinanciamento.toLocaleString('pt-BR');
+            
+            // Gerar alerta de risco
+            gerarAlertaRisco(riscoFinal, comprometimentoObra, comprometimentoPosObra);
+            
+            // Gerar mapa de calor
+            gerarMapaCalor(riscoFinal, rendaFamiliar, vso);
+            
+            // Gerar fluxo de recebíveis
+            gerarFluxoRecebiveis(valorParcelaEntrada, valorFinanciamento, subsidioMoradia, duracaoObra);
+        }
+        
+        function gerarAlertaRisco(risco, compObra, compPosObra) {
+            const alertaDiv = document.getElementById('alertaRisco');
+            let classe, titulo, mensagem;
+            
+            if (risco <= 8 && compPosObra <= 25) {
+                classe = 'success';
+                titulo = '✅ Perfil de Baixo Risco';
+                mensagem = 'Cliente com boa capacidade de pagamento e baixo risco de inadimplência.';
+            } else if (risco <= 15 && compPosObra <= 30) {
+                classe = 'warning';
+                titulo = '⚠️ Perfil de Risco Moderado';
+                mensagem = 'Monitorar evolução da renda e histórico de pagamentos.';
+            } else {
+                classe = 'critical';
+                titulo = '🚨 Perfil de Alto Risco';
+                mensagem = 'Recomenda-se análise mais rigorosa e possível aumento da entrada.';
+            }
+            
+            alertaDiv.innerHTML = `
+                <div class="${classe}">
+                    <h4>${titulo}</h4>
+                    <p>${mensagem}</p>
+                    <ul>
+                        <li>Comprometimento na obra: ${compObra.toFixed(1)}%</li>
+                        <li>Comprometimento pós-obra: ${compPosObra.toFixed(1)}%</li>
+                        <li>Risco estimado: ${risco.toFixed(1)}%</li>
+                    </ul>
+                </div>
+            `;
+        }
+        
+        function gerarMapaCalor(riscoBase, renda, vsoBase) {
+            const heatmap = document.getElementById('riskHeatmap');
+            heatmap.innerHTML = '';
+            
+            // Matriz 5x5 variando renda (eixo Y) e VSO (eixo X)
+            const rendas = [3000, 3500, 4000, 4500, 5000];
+            const vsos = [25, 28, 30, 32, 35];
+            
+            rendas.forEach((rendaTest, i) => {
+                vsos.forEach((vsoTest, j) => {
+                    // Calcular risco para cada combinação
+                    let risco = riscoBase;
+                    
+                    // Ajuste por renda
+                    if (rendaTest < renda) risco += 3;
+                    else if (rendaTest > renda) risco -= 2;
+                    
+                    // Ajuste por VSO
+                    if (vsoTest > vsoBase) risco += 2;
+                    else if (vsoTest < vsoBase) risco -= 1;
+                    
+                    risco = Math.max(1, Math.min(35, risco));
+                    
+                    const cell = document.createElement('div');
+                    cell.className = 'risk-cell';
+                    cell.textContent = risco.toFixed(0) + '%';
+                    cell.title = `Renda: R$ ${rendaTest.toLocaleString()}, VSO: ${vsoTest}%`;
+                    
+                    if (risco <= 5) cell.classList.add('risk-low');
+                    else if (risco <= 10) cell.classList.add('risk-medium-low');
+                    else if (risco <= 15) cell.classList.add('risk-medium');
+                    else if (risco <= 25) cell.classList.add('risk-medium-high');
+                    else cell.classList.add('risk-high');
+                    
+                    heatmap.appendChild(cell);
+                });
+            });
+        }
+        
+        function gerarFluxoRecebiveis(parcelaEntrada, valorFinanciamento, subsidio, duracaoObra) {
+            const fluxoDiv = document.getElementById('fluxoRecebíveis');
+            fluxoDiv.innerHTML = '';
+            
+            const eventos = [
+                { periodo: 'Assinatura', valor: parcelaEntrada, desc: '1ª Parcela Entrada' },
+                { periodo: 'Mês 1-' + Math.floor(duracaoObra/2), valor: parcelaEntrada, desc: 'Parcelas Entrada (mensal)' },
+                { periodo: 'Mês ' + Math.floor(duracaoObra * 0.35), valor: valorFinanciamento * 0.3, desc: '1ª Liberação CEF (30%)' },
+                { periodo: 'Mês ' + Math.floor(duracaoObra * 0.35), valor: subsidio * 0.8, desc: 'Subsídio Moradia (80%)' },
+                { periodo: 'Mês ' + Math.floor(duracaoObra * 0.65), valor: valorFinanciamento * 0.3, desc: '2ª Liberação CEF (30%)' },
+                { periodo: 'Mês ' + Math.floor(duracaoObra * 0.65), valor: subsidio * 0.2, desc: 'Subsídio Restante (20%)' },
+                { periodo: 'Mês ' + Math.floor(duracaoObra * 0.9), valor: valorFinanciamento * 0.3, desc: '3ª Liberação CEF (30%)' },
+                { periodo: 'Entrega', valor: valorFinanciamento * 0.1, desc: 'Liberação Final CEF (10%)' }
+            ];
+            
+            eventos.forEach(evento => {
+                const item = document.createElement('div');
+                item.className = 'flow-item';
+                item.innerHTML = `
+                    <div>
+                        <div class="flow-period">${evento.periodo}</div>
+                        <div style="font-size: 0.9em; color: #666;">${evento.desc}</div>
+                    </div>
+                    <div class="flow-value">R$ ${evento.valor.toLocaleString('pt-BR')}</div>
+                `;
+                fluxoDiv.appendChild(item);
+            });
+        }
+        
+        // Inicializar simulação
+        calcularSimulacao();
+    </script>
+</body>
+</html>
