@@ -22,13 +22,60 @@
                 <h2 class="section-title">🏢 Dados do Empreendimento</h2>
                 
                 <div class="input-grid">
-                    <!-- Mantidos os mesmos inputs com oninput -->
+                    <div class="input-group">
+                        <label>Valor Avaliação CEF (R$)</label>
+                        <input type="number" id="valorAvaliacao" value="230000" oninput="calcularEmpreendimento()">
+                        <span class="info-tooltip" title="Valor de avaliação da unidade pela Caixa Econômica Federal">ℹ️</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Total de Unidades</label>
+                        <input type="number" id="totalUnidades" value="320" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Duração da Obra (meses)</label>
+                        <input type="number" id="duracaoObra" value="20" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Custo por Unidade (R$)</label>
+                        <input type="number" id="custoUnidade" value="138000" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Taxa Velocidade Vendas (%/mês)</label>
+                        <input type="number" id="velocidadeVenda" value="10" step="0.1" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Meta Margem Líquida (%)</label>
+                        <input type="number" id="metaMargem" value="22" step="0.1" oninput="calcularEmpreendimento()">
+                    </div>
                 </div>
                 
                 <h3 class="section-title">💰 Estrutura de Pagamento</h3>
                 
                 <div class="input-grid">
-                    <!-- Mantidos os mesmos inputs com oninput -->
+                    <div class="input-group">
+                        <label>Entrada Construtora (%)</label>
+                        <input type="number" id="entradaConstrutora" value="15" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Entrada Moradia Ceará (R$)</label>
+                        <input type="number" id="entradaMoradia" value="16000" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Prazo Entrada (meses)</label>
+                        <input type="number" id="prazoEntrada" value="36" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Subsídio MCMV Médio (R$)</label>
+                        <input type="number" id="subsidioMedio" value="49000" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Taxa Juros Obra (% a.a.)</label>
+                        <input type="number" id="taxaJurosObra" value="11" step="0.1" oninput="calcularEmpreendimento()">
+                    </div>
+                    <div class="input-group">
+                        <label>Taxa Juros Final (% a.a.)</label>
+                        <input type="number" id="taxaJurosFinal" value="5" step="0.1" oninput="calcularEmpreendimento()">
+                    </div>
                 </div>
                 
                 <h3 class="section-title">📊 Perfil dos Clientes</h3>
@@ -106,7 +153,7 @@
                         </div>
                         <div class="distribution-item">
                             <div class="distribution-value" id="unidadesFaixa3">16</div>
-                            <div class="distribution-label">Faixa 3<br>R$ 8.000-10.000</div>
+                            <div class="distribution-label">Faixa 3<br>R$ 9.000-10.000</div>
                         </div>
                         <div class="distribution-item">
                             <div class="distribution-value" id="tempoVenda">10</div>
@@ -183,14 +230,10 @@
             const vgvTotal = dados.valorAvaliacao * dados.totalUnidades;
             const custoTotal = dados.custoUnidade * dados.totalUnidades;
             
-            // CORREÇÃO: Distribuição por faixa (cálculo direto sem normalização)
+            // CORREÇÃO: Distribuição por faixa (cálculo direto)
             const unidadesFaixa15 = Math.round(dados.totalUnidades * dados.percFaixa15 / 100);
             const unidadesFaixa2 = Math.round(dados.totalUnidades * dados.percFaixa2 / 100);
-            // Garante que não ultrapasse o total de unidades
-            const unidadesFaixa3 = Math.min(
-                dados.totalUnidades - unidadesFaixa15 - unidadesFaixa2,
-                Math.round(dados.totalUnidades * dados.percFaixa3 / 100)
-            );
+            const unidadesFaixa3 = dados.totalUnidades - unidadesFaixa15 - unidadesFaixa2;
             
             // Tempo de venda
             const tempoVendaTotal = Math.ceil(100 / dados.velocidadeVenda);
@@ -343,7 +386,138 @@
             document.getElementById('unidadesFaixa3').textContent = analise.unidadesFaixa3;
             document.getElementById('tempoVenda').textContent = analise.tempoVendaTotal;
             
-            // Restante do código mantido...
+            // Totais por fonte
+            document.getElementById('totalEntradas').textContent = formatarMilhoes(analise.totalEntradas);
+            document.getElementById('totalFinanciamento').textContent = formatarMilhoes(analise.totalFinanciamento);
+            document.getElementById('totalSubsidios').textContent = formatarMilhoes(analise.totalSubsidios);
+            
+            // Riscos
+            const riskInad = document.getElementById('riskInadimplencia');
+            const riskDist = document.getElementById('riskDistrato');
+            
+            // Ajustar visualização de risco
+            const riscoInadPercent = Math.min(100, analise.riscoInadimplencia * 10);
+            const riscoDistPercent = Math.min(100, analise.riscoDistrato * 10);
+            
+            riskInad.style.width = `${riscoInadPercent}%`;
+            riskDist.style.width = `${riscoDistPercent}%`;
+            
+            // Classificar risco por cor
+            const riscoClassInad = analise.riscoInadimplencia < 10 ? 'risk-low' : 
+                                analise.riscoInadimplencia < 20 ? 'risk-medium' : 'risk-high';
+            const riscoClassDist = analise.riscoDistrato < 8 ? 'risk-low' : 
+                                analise.riscoDistrato < 15 ? 'risk-medium' : 'risk-high';
+            
+            riskInad.className = `risk-fill ${riscoClassInad}`;
+            riskDist.className = `risk-fill ${riscoClassDist}`;
+            
+            // Exibir valores de risco
+            document.getElementById('riscoInadValue').textContent = `${analise.riscoInadimplencia.toFixed(1)}%`;
+            document.getElementById('riscoDistValue').textContent = `${analise.riscoDistrato.toFixed(1)}%`;
+            document.getElementById('impactoInadimplencia').textContent = (analise.impactoInadimplencia / 1000000).toFixed(2) + 'M';
+            document.getElementById('impactoDistrato').textContent = (analise.impactoDistrato / 1000000).toFixed(2) + 'M';
+            
+            // Cronograma
+            const cronogramaContainer = document.getElementById('cronogramaRecebimentos');
+            cronogramaContainer.innerHTML = '';
+            
+            analise.cronograma.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flow-item';
+                div.innerHTML = `
+                    <div class="flow-period">${item.periodo}</div>
+                    <div class="flow-desc">${item.descricao}</div>
+                    <div class="flow-value">${formatarMoeda(item.valor)}</div>
+                `;
+                cronogramaContainer.appendChild(div);
+            });
+            
+            // Alertas Gerais
+            const alertasContainer = document.getElementById('alertasGerais');
+            alertasContainer.innerHTML = '';
+            
+            // Verificar soma percentual das faixas
+            const somaPercentual = analise.percFaixa15 + analise.percFaixa2 + analise.percFaixa3;
+            const percentualDesbalanceado = Math.abs(somaPercentual - 100) > 1;
+            
+            if (percentualDesbalanceado) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-danger';
+                alerta.innerHTML = `<span>⚠️</span> ATENÇÃO: A soma das porcentagens das faixas MCMV é ${somaPercentual.toFixed(1)}% (deve ser 100%).`;
+                alertasContainer.appendChild(alerta);
+            }
+            
+            // Alerta de margem
+            if (analise.margemLiquida < 15) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-danger';
+                alerta.innerHTML = `<span>⚠️</span> ATENÇÃO: Margem líquida abaixo do ideal (${analise.margemLiquida.toFixed(1)}%).`;
+                alertasContainer.appendChild(alerta);
+            } else if (analise.margemLiquida < analise.metaMargem) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-warning';
+                alerta.innerHTML = `<span>⚠️</span> ATENÇÃO: Margem líquida (${analise.margemLiquida.toFixed(1)}%) abaixo da meta (${analise.metaMargem}%).`;
+                alertasContainer.appendChild(alerta);
+            } else {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-success';
+                alerta.innerHTML = `<span>✅</span> EXCELENTE: Margem líquida acima da meta estabelecida (${analise.margemLiquida.toFixed(1)}% vs meta ${analise.metaMargem}%)!`;
+                alertasContainer.appendChild(alerta);
+            }
+            
+            // Alerta de risco de inadimplência
+            if (analise.riscoInadimplencia > 15) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-danger';
+                alerta.innerHTML = `<span>⚠️</span> ALTO RISCO: Inadimplência projetada em ${analise.riscoInadimplencia.toFixed(1)}%!`;
+                alertasContainer.appendChild(alerta);
+            } else if (analise.riscoInadimplencia > 10) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-warning';
+                alerta.innerHTML = `<span>⚠️</span> RISCO MODERADO: Inadimplência projetada em ${analise.riscoInadimplencia.toFixed(1)}%.`;
+                alertasContainer.appendChild(alerta);
+            } else {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-success';
+                alerta.innerHTML = `<span>✅</span> BAIXO RISCO: Inadimplência projetada em apenas ${analise.riscoInadimplencia.toFixed(1)}%!`;
+                alertasContainer.appendChild(alerta);
+            }
+            
+            // Alerta de comprometimento de renda
+            if (analise.comprometimentoRenda > 35) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-danger';
+                alerta.innerHTML = `<span>⚠️</span> COMPROMETIMENTO CRÍTICO: ${analise.comprometimentoRenda.toFixed(1)}% da renda comprometida com parcelas.`;
+                alertasContainer.appendChild(alerta);
+            } else if (analise.comprometimentoRenda > 30) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-warning';
+                alerta.innerHTML = `<span>⚠️</span> COMPROMETIMENTO ELEVADO: ${analise.comprometimentoRenda.toFixed(1)}% da renda comprometida com parcelas.`;
+                alertasContainer.appendChild(alerta);
+            } else {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-success';
+                alerta.innerHTML = `<span>✅</span> COMPROMETIMENTO ADEQUADO: ${analise.comprometimentoRenda.toFixed(1)}% da renda com parcelas.`;
+                alertasContainer.appendChild(alerta);
+            }
+            
+            // Alerta de velocidade de vendas
+            if (analise.tempoVendaTotal > 15) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-danger';
+                alerta.innerHTML = `<span>⏳</span> VENDAS LENTAS: Projeção de ${analise.tempoVendaTotal} meses para venda total.`;
+                alertasContainer.appendChild(alerta);
+            } else if (analise.tempoVendaTotal > 12) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-warning';
+                alerta.innerHTML = `<span>⏳</span> VENDAS PODEM SER OTIMIZADAS: Projeção de ${analise.tempoVendaTotal} meses para venda total.`;
+                alertasContainer.appendChild(alerta);
+            } else {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-success';
+                alerta.innerHTML = `<span>✅</span> VENDAS ACELERADAS: Apenas ${analise.tempoVendaTotal} meses para venda total!`;
+                alertasContainer.appendChild(alerta);
+            }
         }
 
         // Inicializar com valores padrão ao carregar a página
