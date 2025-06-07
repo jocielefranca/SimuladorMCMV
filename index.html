@@ -5,7 +5,394 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador Empreendimento MCMV - Cenário Ideal</title>
     <style>
-        /* Mantido o mesmo estilo anterior */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c 0%, #2c3e50 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c5a2c 0%, #2c9d2c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .version-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #27ae60;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            padding: 30px;
+        }
+        
+        .panel {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #2c9d2c;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9em;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            border-color: #2c9d2c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44, 157, 44, 0.2);
+        }
+        
+        .input-group .info-tooltip {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            color: #2c9d2c;
+            cursor: help;
+            font-size: 0.9em;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #2c9d2c 0%, #2c5a2c 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin: 20px 0;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .kpi-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #2c9d2c;
+            transition: transform 0.3s;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .kpi-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+        
+        .kpi-label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .chart-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .flow-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .flow-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            border-left: 4px solid #2c9d2c;
+            transition: transform 0.2s;
+        }
+        
+        .flow-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .flow-period {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 120px;
+        }
+        
+        .flow-desc {
+            flex: 1;
+            margin: 0 15px;
+            color: #555;
+        }
+        
+        .flow-value {
+            font-weight: bold;
+            color: #27ae60;
+            font-size: 1.1em;
+        }
+        
+        .risk-analysis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .risk-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .risk-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .risk-value {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .risk-meter {
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .risk-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .risk-low { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+        .risk-medium { background: linear-gradient(90deg, #f39c12, #e67e22); }
+        .risk-high { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .distribution-chart {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .distribution-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .distribution-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .distribution-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c9d2c;
+            margin-bottom: 5px;
+        }
+        
+        .distribution-label {
+            font-size: 0.8em;
+            color: #666;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #2c9d2c;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-grid, .distribution-chart, .risk-analysis {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -162,7 +549,86 @@
                     </div>
                 </div>
                 
-                <!-- Restante do painel mantido igual -->
+                <div class="chart-container">
+                    <div class="chart-title">Cronograma de Recebimentos</div>
+                    <div class="flow-timeline" id="cronogramaRecebimentos">
+                        <div class="flow-item">
+                            <div class="flow-period">0-10 meses</div>
+                            <div class="flow-desc">Entradas + Moradia Ceará</div>
+                            <div class="flow-value">R$ 12.160.000</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-period">3-8 meses</div>
+                            <div class="flow-desc">1ª e 2ª Liberação CEF</div>
+                            <div class="flow-value">R$ 32.320.000</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-period">8-14 meses</div>
+                            <div class="flow-desc">3ª Liberação CEF</div>
+                            <div class="flow-value">R$ 19.392.000</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-period">14-20 meses</div>
+                            <div class="flow-desc">Liberação Final CEF</div>
+                            <div class="flow-value">R$ 12.928.000</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-period">3-20 meses</div>
+                            <div class="flow-desc">Subsídios MCMV</div>
+                            <div class="flow-value">R$ 15.680.000</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="risk-analysis">
+                    <div class="risk-card">
+                        <div class="risk-title">
+                            <span>Risco de Inadimplência</span>
+                            <span class="risk-value" id="riscoInadValue">8%</span>
+                        </div>
+                        <div class="risk-meter">
+                            <div class="risk-fill risk-low" id="riskInadimplencia" style="width: 8%"></div>
+                        </div>
+                        <div>Impacto: R$ <span id="impactoInadimplencia">0.32M</span></div>
+                    </div>
+                    <div class="risk-card">
+                        <div class="risk-title">
+                            <span>Risco de Distrato</span>
+                            <span class="risk-value" id="riscoDistValue">6%</span>
+                        </div>
+                        <div class="risk-meter">
+                            <div class="risk-fill risk-low" id="riskDistrato" style="width: 6%"></div>
+                        </div>
+                        <div>Impacto: R$ <span id="impactoDistrato">0.14M</span></div>
+                    </div>
+                </div>
+                
+                <div id="alertasGerais">
+                    <div class="alert alert-success">
+                        <span>✅</span> EXCELENTE: Margem líquida acima da meta estabelecida!
+                    </div>
+                    <div class="alert alert-success">
+                        <span>✅</span> BAIXO RISCO: Cenário ideal com inadimplência controlada!
+                    </div>
+                </div>
+                
+                <div class="chart-container full-width">
+                    <div class="chart-title">Fluxo de Caixa Acumulado</div>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="totalEntradas">R$ 12.16M</div>
+                            <div class="kpi-label">Entradas + Moradia CE</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="totalFinanciamento">R$ 64.64M</div>
+                            <div class="kpi-label">Financiamento CEF</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="totalSubsidios">R$ 15.68M</div>
+                            <div class="kpi-label">Subsídios MCMV</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -230,7 +696,7 @@
             const vgvTotal = dados.valorAvaliacao * dados.totalUnidades;
             const custoTotal = dados.custoUnidade * dados.totalUnidades;
             
-            // CORREÇÃO: Distribuição por faixa (cálculo direto)
+            // Distribuição por faixa
             const unidadesFaixa15 = Math.round(dados.totalUnidades * dados.percFaixa15 / 100);
             const unidadesFaixa2 = Math.round(dados.totalUnidades * dados.percFaixa2 / 100);
             const unidadesFaixa3 = dados.totalUnidades - unidadesFaixa15 - unidadesFaixa2;
@@ -329,7 +795,8 @@
                 parcelaMensal: parcela,
                 percFaixa15: dados.percFaixa15,
                 percFaixa2: dados.percFaixa2,
-                percFaixa3: dados.percFaixa3
+                percFaixa3: dados.percFaixa3,
+                metaMargem: dados.metaMargem
             };
         }
         
@@ -380,7 +847,7 @@
             document.getElementById('margemLiquida').textContent = `${analise.margemLiquida.toFixed(1)}%`;
             document.getElementById('lucroLiquido').textContent = formatarMilhoes(analise.lucroLiquido);
             
-            // CORREÇÃO: Distribuição por faixa (valores atualizados)
+            // Distribuição por faixa
             document.getElementById('unidadesFaixa15').textContent = analise.unidadesFaixa15;
             document.getElementById('unidadesFaixa2').textContent = analise.unidadesFaixa2;
             document.getElementById('unidadesFaixa3').textContent = analise.unidadesFaixa3;
