@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Empreendimento MCMV - Versão Corrigida</title>
+    <title>Simulador Empreendimento MCMV - Cenário Ideal</title>
     <style>
         * {
             margin: 0;
@@ -28,7 +29,7 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: linear-gradient(135deg, #2c5a2c 0%, #2c9d2c 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -52,10 +53,11 @@
             right: 15px;
             background: #27ae60;
             color: white;
-            padding: 5px 10px;
+            padding: 8px 15px;
             border-radius: 20px;
             font-size: 0.9em;
             font-weight: 600;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
         
         .main-content {
@@ -78,7 +80,7 @@
             font-size: 1.4em;
             font-weight: 600;
             margin-bottom: 20px;
-            border-bottom: 3px solid #3498db;
+            border-bottom: 3px solid #2c9d2c;
             padding-bottom: 8px;
             display: flex;
             align-items: center;
@@ -118,22 +120,22 @@
         }
         
         .input-group input:focus, .input-group select:focus {
-            border-color: #3498db;
+            border-color: #2c9d2c;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 0 3px rgba(44, 157, 44, 0.2);
         }
         
         .input-group .info-tooltip {
             position: absolute;
             top: 8px;
             right: 10px;
-            color: #3498db;
+            color: #2c9d2c;
             cursor: help;
             font-size: 0.9em;
         }
         
         .btn {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            background: linear-gradient(135deg, #2c9d2c 0%, #2c5a2c 100%);
             color: white;
             padding: 15px 30px;
             border: none;
@@ -169,7 +171,7 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #2c9d2c;
             transition: transform 0.3s;
         }
         
@@ -219,7 +221,7 @@
             padding: 12px 15px;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 8px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #2c9d2c;
             transition: transform 0.2s;
         }
         
@@ -269,7 +271,7 @@
         
         .risk-value {
             font-weight: bold;
-            color: #e74c3c;
+            color: #27ae60;
         }
         
         .risk-meter {
@@ -345,7 +347,7 @@
         .distribution-value {
             font-size: 1.5em;
             font-weight: bold;
-            color: #3498db;
+            color: #2c9d2c;
             margin-bottom: 5px;
         }
         
@@ -359,7 +361,7 @@
             padding: 15px;
             border-radius: 8px;
             margin-top: 20px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #2c9d2c;
         }
         
         .instructions h3 {
@@ -404,9 +406,9 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="version-badge">Versão Corrigida</div>
+            <div class="version-badge">Cenário Ideal</div>
             <h1>Simulador Empreendimento MCMV</h1>
-            <p>Análise Completa com Riscos Dinâmicos • 320 Unidades • Ceará</p>
+            <p>Projeção Otimizada com Riscos Controlados • 320 Unidades • Ceará</p>
         </div>
         
         <div class="main-content">
@@ -417,7 +419,7 @@
                 <div class="input-grid">
                     <div class="input-group">
                         <label>Valor Avaliação CEF (R$)</label>
-                        <input type="number" id="valorAvaliacao" value="225000">
+                        <input type="number" id="valorAvaliacao" value="230000">
                         <span class="info-tooltip" title="Valor de avaliação da unidade pela Caixa Econômica Federal">ℹ️</span>
                     </div>
                     <div class="input-group">
@@ -426,19 +428,19 @@
                     </div>
                     <div class="input-group">
                         <label>Duração da Obra (meses)</label>
-                        <input type="number" id="duracaoObra" value="22">
+                        <input type="number" id="duracaoObra" value="20">
                     </div>
                     <div class="input-group">
                         <label>Custo por Unidade (R$)</label>
-                        <input type="number" id="custoUnidade" value="140000">
+                        <input type="number" id="custoUnidade" value="138000">
                     </div>
                     <div class="input-group">
                         <label>Taxa Velocidade Vendas (%/mês)</label>
-                        <input type="number" id="velocidadeVenda" value="8" step="0.1">
+                        <input type="number" id="velocidadeVenda" value="10" step="0.1">
                     </div>
                     <div class="input-group">
                         <label>Meta Margem Líquida (%)</label>
-                        <input type="number" id="metaMargem" value="18" step="0.1">
+                        <input type="number" id="metaMargem" value="22" step="0.1">
                     </div>
                 </div>
                 
@@ -447,11 +449,11 @@
                 <div class="input-grid">
                     <div class="input-group">
                         <label>Entrada Construtora (%)</label>
-                        <input type="number" id="entradaConstrutora" value="10">
+                        <input type="number" id="entradaConstrutora" value="15">
                     </div>
                     <div class="input-group">
                         <label>Entrada Moradia Ceará (R$)</label>
-                        <input type="number" id="entradaMoradia" value="15000">
+                        <input type="number" id="entradaMoradia" value="16000">
                     </div>
                     <div class="input-group">
                         <label>Prazo Entrada (meses)</label>
@@ -459,15 +461,15 @@
                     </div>
                     <div class="input-group">
                         <label>Subsídio MCMV Médio (R$)</label>
-                        <input type="number" id="subsidioMedio" value="47500">
+                        <input type="number" id="subsidioMedio" value="49000">
                     </div>
                     <div class="input-group">
                         <label>Taxa Juros Obra (% a.a.)</label>
-                        <input type="number" id="taxaJurosObra" value="12" step="0.1">
+                        <input type="number" id="taxaJurosObra" value="11" step="0.1">
                     </div>
                     <div class="input-group">
                         <label>Taxa Juros Final (% a.a.)</label>
-                        <input type="number" id="taxaJurosFinal" value="5.5" step="0.1">
+                        <input type="number" id="taxaJurosFinal" value="5" step="0.1">
                     </div>
                 </div>
                 
@@ -476,16 +478,16 @@
                 <div class="input-grid">
                     <div class="input-group">
                         <label>Renda Média Familiar (R$)</label>
-                        <input type="number" id="rendaMedia" value="4200">
+                        <input type="number" id="rendaMedia" value="5500">
                         <span class="info-tooltip" title="Alterar este valor afeta diretamente o risco de inadimplência">⚠️</span>
                     </div>
                     <div class="input-group">
                         <label>% Faixa 1.5 MCMV</label>
-                        <input type="number" id="percFaixa15" value="65">
+                        <input type="number" id="percFaixa15" value="60">
                     </div>
                     <div class="input-group">
                         <label>% Faixa 2 MCMV</label>
-                        <input type="number" id="percFaixa2" value="30">
+                        <input type="number" id="percFaixa2" value="35">
                     </div>
                     <div class="input-group">
                         <label>% Faixa 3 MCMV</label>
@@ -493,42 +495,42 @@
                     </div>
                     <div class="input-group">
                         <label>Score Médio Clientes</label>
-                        <input type="number" id="scoreMedia" value="580">
+                        <input type="number" id="scoreMedia" value="650">
                     </div>
                     <div class="input-group">
                         <label>% Renda Comprovada</label>
-                        <input type="number" id="rendaComprovada" value="72">
+                        <input type="number" id="rendaComprovada" value="85">
                     </div>
                 </div>
                 
-                <button class="btn" onclick="calcularEmpreendimento()">🚀 Calcular Análise Completa</button>
+                <button class="btn" onclick="calcularEmpreendimento()">🚀 Calcular Cenário Ideal</button>
                 
                 <div class="instructions">
-                    <h3>Instruções para Testar as Correções:</h3>
+                    <h3>Como Otimizar seu Empreendimento:</h3>
                     <ul>
-                        <li><strong>Altere a renda média</strong> (abaixo de R$ 3.000) para ver os riscos aumentarem</li>
-                        <li><strong>Reduza a entrada da construtora</strong> (abaixo de 10%) para ver o risco de distrato aumentar</li>
-                        <li><strong>Aumente a renda</strong> (acima de R$ 6.000) para ver os riscos diminuirem</li>
-                        <li><strong>Teste diferentes combinações</strong> para ver a reação dos indicadores de risco</li>
+                        <li><strong>Mantenha a renda média acima de R$ 5.000</strong> para reduzir riscos de inadimplência</li>
+                        <li><strong>Defina a entrada da construtora acima de 12%</strong> para diminuir o risco de distrato</li>
+                        <li><strong>Busque score médio acima de 650</strong> para clientes mais qualificados</li>
+                        <li><strong>Mantenha margem líquida acima de 20%</strong> para garantir rentabilidade</li>
                     </ul>
                 </div>
             </div>
             
             <!-- Painel 2: Resultados e Análises -->
             <div class="panel">
-                <h2 class="section-title">📈 Indicadores do Empreendimento</h2>
+                <h2 class="section-title">📈 Indicadores do Cenário Ideal</h2>
                 
                 <div class="kpi-grid">
                     <div class="kpi-card">
-                        <div class="kpi-value" id="vgvTotal">R$ 72.0M</div>
+                        <div class="kpi-value" id="vgvTotal">R$ 73.6M</div>
                         <div class="kpi-label">VGV Total</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-value" id="margemLiquida">18.0%</div>
+                        <div class="kpi-value" id="margemLiquida">22.3%</div>
                         <div class="kpi-label">Margem Líquida</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-value" id="lucroLiquido">R$ 12.96M</div>
+                        <div class="kpi-value" id="lucroLiquido">R$ 16.42M</div>
                         <div class="kpi-label">Lucro Líquido</div>
                     </div>
                 </div>
@@ -537,11 +539,11 @@
                     <div class="chart-title">Distribuição por Faixa MCMV</div>
                     <div class="distribution-chart">
                         <div class="distribution-item">
-                            <div class="distribution-value" id="unidadesFaixa15">208</div>
+                            <div class="distribution-value" id="unidadesFaixa15">192</div>
                             <div class="distribution-label">Faixa 1.5<br>R$ 2.640-4.400</div>
                         </div>
                         <div class="distribution-item">
-                            <div class="distribution-value" id="unidadesFaixa2">96</div>
+                            <div class="distribution-value" id="unidadesFaixa2">112</div>
                             <div class="distribution-label">Faixa 2<br>R$ 4.400-8.000</div>
                         </div>
                         <div class="distribution-item">
@@ -549,7 +551,7 @@
                             <div class="distribution-label">Faixa 3<br>R$ 8.000-10.000</div>
                         </div>
                         <div class="distribution-item">
-                            <div class="distribution-value" id="tempoVenda">13</div>
+                            <div class="distribution-value" id="tempoVenda">10</div>
                             <div class="distribution-label">Meses para<br>Venda Total</div>
                         </div>
                     </div>
@@ -559,29 +561,29 @@
                     <div class="chart-title">Cronograma de Recebimentos</div>
                     <div class="flow-timeline" id="cronogramaRecebimentos">
                         <div class="flow-item">
-                            <div class="flow-period">0-13 meses</div>
+                            <div class="flow-period">0-10 meses</div>
                             <div class="flow-desc">Entradas + Moradia Ceará</div>
-                            <div class="flow-value">R$ 10.880.000</div>
+                            <div class="flow-value">R$ 12.160.000</div>
                         </div>
                         <div class="flow-item">
-                            <div class="flow-period">4-9 meses</div>
+                            <div class="flow-period">3-8 meses</div>
                             <div class="flow-desc">1ª e 2ª Liberação CEF</div>
-                            <div class="flow-value">R$ 30.560.000</div>
+                            <div class="flow-value">R$ 32.320.000</div>
                         </div>
                         <div class="flow-item">
-                            <div class="flow-period">9-15 meses</div>
+                            <div class="flow-period">8-14 meses</div>
                             <div class="flow-desc">3ª Liberação CEF</div>
-                            <div class="flow-value">R$ 18.336.000</div>
+                            <div class="flow-value">R$ 19.392.000</div>
                         </div>
                         <div class="flow-item">
-                            <div class="flow-period">15-22 meses</div>
+                            <div class="flow-period">14-20 meses</div>
                             <div class="flow-desc">Liberação Final CEF</div>
-                            <div class="flow-value">R$ 12.224.000</div>
+                            <div class="flow-value">R$ 12.928.000</div>
                         </div>
                         <div class="flow-item">
-                            <div class="flow-period">4-22 meses</div>
+                            <div class="flow-period">3-20 meses</div>
                             <div class="flow-desc">Subsídios MCMV</div>
-                            <div class="flow-value">R$ 15.200.000</div>
+                            <div class="flow-value">R$ 15.680.000</div>
                         </div>
                     </div>
                 </div>
@@ -590,31 +592,31 @@
                     <div class="risk-card">
                         <div class="risk-title">
                             <span>Risco de Inadimplência</span>
-                            <span class="risk-value" id="riscoInadValue">55%</span>
+                            <span class="risk-value" id="riscoInadValue">8%</span>
                         </div>
                         <div class="risk-meter">
-                            <div class="risk-fill risk-medium" id="riskInadimplencia" style="width: 55%"></div>
+                            <div class="risk-fill risk-low" id="riskInadimplencia" style="width: 8%"></div>
                         </div>
-                        <div>Impacto: R$ <span id="impactoInadimplencia">1.84M</span></div>
+                        <div>Impacto: R$ <span id="impactoInadimplencia">0.32M</span></div>
                     </div>
                     <div class="risk-card">
                         <div class="risk-title">
                             <span>Risco de Distrato</span>
-                            <span class="risk-value" id="riscoDistValue">33%</span>
+                            <span class="risk-value" id="riscoDistValue">6%</span>
                         </div>
                         <div class="risk-meter">
-                            <div class="risk-fill risk-low" id="riskDistrato" style="width: 33%"></div>
+                            <div class="risk-fill risk-low" id="riskDistrato" style="width: 6%"></div>
                         </div>
-                        <div>Impacto: R$ <span id="impactoDistrato">0.72M</span></div>
+                        <div>Impacto: R$ <span id="impactoDistrato">0.14M</span></div>
                     </div>
                 </div>
                 
                 <div id="alertasGerais">
                     <div class="alert alert-success">
-                        <span>✅</span> ÓTIMO: Margem líquida dentro ou acima da meta estabelecida!
+                        <span>✅</span> EXCELENTE: Margem líquida acima da meta estabelecida!
                     </div>
-                    <div class="alert alert-warning">
-                        <span>⚠️</span> CUIDADO: Risco de inadimplência moderado. Monitorar perfil dos clientes.
+                    <div class="alert alert-success">
+                        <span>✅</span> BAIXO RISCO: Cenário ideal com inadimplência controlada!
                     </div>
                 </div>
                 
@@ -622,15 +624,15 @@
                     <div class="chart-title">Fluxo de Caixa Acumulado</div>
                     <div class="kpi-grid">
                         <div class="kpi-card">
-                            <div class="kpi-value" id="totalEntradas">R$ 10.88M</div>
+                            <div class="kpi-value" id="totalEntradas">R$ 12.16M</div>
                             <div class="kpi-label">Entradas + Moradia CE</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-value" id="totalFinanciamento">R$ 61.12M</div>
+                            <div class="kpi-value" id="totalFinanciamento">R$ 64.64M</div>
                             <div class="kpi-label">Financiamento CEF</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-value" id="totalSubsidios">R$ 15.20M</div>
+                            <div class="kpi-value" id="totalSubsidios">R$ 15.68M</div>
                             <div class="kpi-label">Subsídios MCMV</div>
                         </div>
                     </div>
@@ -670,24 +672,24 @@
         
         function capturarDados() {
             return {
-                valorAvaliacao: parseFloat(document.getElementById('valorAvaliacao').value) || 225000,
+                valorAvaliacao: parseFloat(document.getElementById('valorAvaliacao').value) || 230000,
                 totalUnidades: parseFloat(document.getElementById('totalUnidades').value) || 320,
-                duracaoObra: parseFloat(document.getElementById('duracaoObra').value) || 22,
-                custoUnidade: parseFloat(document.getElementById('custoUnidade').value) || 140000,
-                velocidadeVenda: parseFloat(document.getElementById('velocidadeVenda').value) || 8,
-                metaMargem: parseFloat(document.getElementById('metaMargem').value) || 18,
-                entradaConstrutora: parseFloat(document.getElementById('entradaConstrutora').value) || 10,
-                entradaMoradia: parseFloat(document.getElementById('entradaMoradia').value) || 15000,
+                duracaoObra: parseFloat(document.getElementById('duracaoObra').value) || 20,
+                custoUnidade: parseFloat(document.getElementById('custoUnidade').value) || 138000,
+                velocidadeVenda: parseFloat(document.getElementById('velocidadeVenda').value) || 10,
+                metaMargem: parseFloat(document.getElementById('metaMargem').value) || 22,
+                entradaConstrutora: parseFloat(document.getElementById('entradaConstrutora').value) || 15,
+                entradaMoradia: parseFloat(document.getElementById('entradaMoradia').value) || 16000,
                 prazoEntrada: parseFloat(document.getElementById('prazoEntrada').value) || 36,
-                subsidioMedio: parseFloat(document.getElementById('subsidioMedio').value) || 47500,
-                taxaJurosObra: parseFloat(document.getElementById('taxaJurosObra').value) || 12,
-                taxaJurosFinal: parseFloat(document.getElementById('taxaJurosFinal').value) || 5.5,
-                rendaMedia: parseFloat(document.getElementById('rendaMedia').value) || 4200,
-                percFaixa15: parseFloat(document.getElementById('percFaixa15').value) || 65,
-                percFaixa2: parseFloat(document.getElementById('percFaixa2').value) || 30,
+                subsidioMedio: parseFloat(document.getElementById('subsidioMedio').value) || 49000,
+                taxaJurosObra: parseFloat(document.getElementById('taxaJurosObra').value) || 11,
+                taxaJurosFinal: parseFloat(document.getElementById('taxaJurosFinal').value) || 5,
+                rendaMedia: parseFloat(document.getElementById('rendaMedia').value) || 5500,
+                percFaixa15: parseFloat(document.getElementById('percFaixa15').value) || 60,
+                percFaixa2: parseFloat(document.getElementById('percFaixa2').value) || 35,
                 percFaixa3: parseFloat(document.getElementById('percFaixa3').value) || 5,
-                scoreMedia: parseFloat(document.getElementById('scoreMedia').value) || 580,
-                rendaComprovada: parseFloat(document.getElementById('rendaComprovada').value) || 72
+                scoreMedia: parseFloat(document.getElementById('scoreMedia').value) || 650,
+                rendaComprovada: parseFloat(document.getElementById('rendaComprovada').value) || 85
             };
         }
         
@@ -711,13 +713,13 @@
             const totalFinanciamento = vgvTotal - totalEntradas - totalSubsidios;
             
             // =============================================================================
-            // NOVO CÁLCULO DE RISCO
+            // NOVO CÁLCULO DE RISCO PARA CENÁRIO IDEAL
             // =============================================================================
-            // Risco base por faixa
+            // Risco base por faixa (reduzido no cenário ideal)
             const riscoPorFaixa = {
-                1.5: 8, // Faixa 1.5 tem menor risco
-                2: 12,  // Faixa 2 risco moderado
-                3: 18   // Faixa 3 maior risco
+                1.5: 4, // Risco baixo para faixa 1.5
+                2: 6,   // Risco moderado para faixa 2
+                3: 10   // Risco médio para faixa 3
             };
             
             // 1. Calcular risco base
@@ -740,44 +742,44 @@
             
             // 4. Ajustar risco com base na renda
             let ajusteRenda = 1;
-            if (comprometimentoRenda > 30) ajusteRenda = 1.7; // Alto comprometimento
-            else if (comprometimentoRenda > 20) ajusteRenda = 1.3; // Médio comprometimento
-            else ajusteRenda = 0.9; // Baixo comprometimento
+            if (comprometimentoRenda > 30) ajusteRenda = 1.4; 
+            else if (comprometimentoRenda > 20) ajusteRenda = 1.1; 
+            else ajusteRenda = 0.8; // Baixo comprometimento
             
             // 5. Ajustar risco com base na entrada
-            const ajusteEntrada = dados.entradaConstrutora < 10 ? 1.4 : 0.85;
+            const ajusteEntrada = dados.entradaConstrutora < 10 ? 1.4 : dados.entradaConstrutora > 15 ? 0.7 : 0.9;
             
             // 6. Ajuste de score
-            const ajusteScore = dados.scoreMedia < 500 ? 1.4 : dados.scoreMedia > 650 ? 0.8 : 1;
+            const ajusteScore = dados.scoreMedia < 550 ? 1.4 : dados.scoreMedia > 700 ? 0.6 : 0.8;
             
-            // 7. Risco final combinado
+            // 7. Risco final combinado (reduzido no cenário ideal)
             const riscoFinal = riscoBase * ajusteScore * ajusteRenda * ajusteEntrada;
             
-            // 8. Risco de distrato (geralmente menor que inadimplência)
-            const riscoDistrato = riscoFinal * 0.6;
+            // 8. Risco de distrato (reduzido no cenário ideal)
+            const riscoDistrato = riscoFinal * 0.5;
             // =============================================================================
             // FIM DO NOVO CÁLCULO
             // =============================================================================
             
-            // Impactos financeiros
+            // Impactos financeiros (reduzidos no cenário ideal)
             const impactoInadimplencia = totalFinanciamento * (riscoFinal / 100);
-            const impactoDistrato = vgvTotal * (riscoDistrato / 100) * 0.3; // 30% de perda no distrato
+            const impactoDistrato = vgvTotal * (riscoDistrato / 100) * 0.2; // 20% de perda no distrato
             
-            // Custos adicionais
-            const despesasAdministrativas = vgvTotal * 0.04; // 4% do VGV
-            const custosComercializacao = vgvTotal * 0.03; // 3% do VGV
-            const impostos = vgvTotal * 0.05; // 5% do VGV
+            // Custos adicionais (otimizados)
+            const despesasAdministrativas = vgvTotal * 0.035; // 3.5% do VGV
+            const custosComercializacao = vgvTotal * 0.025; // 2.5% do VGV
+            const impostos = vgvTotal * 0.045; // 4.5% do VGV
             
-            // Cálculo de juros
-            const custosFinanceiros = totalFinanciamento * (dados.taxaJurosObra / 100) * (dados.duracaoObra / 12);
+            // Cálculo de juros (reduzidos)
+            const custosFinanceiros = totalFinanciamento * (dados.taxaJurosObra / 100) * (dados.duracaoObra / 12) * 0.9; // Redução de 10%
             
-            // Margem e lucro
+            // Margem e lucro (aumentados)
             const lucroLiquido = vgvTotal - custoTotal - custosFinanceiros - 
                                 despesasAdministrativas - custosComercializacao - impostos - 
                                 impactoInadimplencia - impactoDistrato;
             const margemLiquida = (lucroLiquido / vgvTotal * 100);
             
-            // Cronograma de recebimentos
+            // Cronograma de recebimentos (acelerado)
             const cronograma = gerarCronogramaRecebimentos(dados, totalEntradas, totalFinanciamento, totalSubsidios);
             
             return {
@@ -816,11 +818,11 @@
                 tipo: "entrada"
             });
             
-            // Financiamento CEF (liberado durante a obra)
+            // Financiamento CEF (liberado durante a obra) - acelerado
             const liberacoes = [
-                { periodo: `${Math.floor(dados.duracaoObra * 0.2)}-${Math.floor(dados.duracaoObra * 0.4)}`, desc: "1ª e 2ª Liberação CEF", perc: 0.5 },
-                { periodo: `${Math.floor(dados.duracaoObra * 0.4)}-${Math.floor(dados.duracaoObra * 0.7)}`, desc: "3ª Liberação CEF", perc: 0.3 },
-                { periodo: `${Math.floor(dados.duracaoObra * 0.7)}-${dados.duracaoObra}`, desc: "Liberação Final CEF", perc: 0.2 }
+                { periodo: `${Math.floor(dados.duracaoObra * 0.15)}-${Math.floor(dados.duracaoObra * 0.35)}`, desc: "1ª e 2ª Liberação CEF", perc: 0.5 },
+                { periodo: `${Math.floor(dados.duracaoObra * 0.35)}-${Math.floor(dados.duracaoObra * 0.65)}`, desc: "3ª Liberação CEF", perc: 0.3 },
+                { periodo: `${Math.floor(dados.duracaoObra * 0.65)}-${dados.duracaoObra}`, desc: "Liberação Final CEF", perc: 0.2 }
             ];
             
             liberacoes.forEach(lib => {
@@ -832,9 +834,9 @@
                 });
             });
             
-            // Subsídios (junto com financiamento)
+            // Subsídios (junto com financiamento) - acelerado
             cronograma.push({
-                periodo: `${Math.floor(dados.duracaoObra * 0.2)}-${dados.duracaoObra} meses`,
+                periodo: `${Math.floor(dados.duracaoObra * 0.15)}-${dados.duracaoObra} meses`,
                 descricao: "Subsídios MCMV",
                 valor: totalSubsidios,
                 tipo: "subsidio"
@@ -864,8 +866,9 @@
             const riskInad = document.getElementById('riskInadimplencia');
             const riskDist = document.getElementById('riskDistrato');
             
-            const riscoInadPercent = Math.min(100, analise.riscoInadimplencia * 5);
-            const riscoDistPercent = Math.min(100, analise.riscoDistrato * 5);
+            // No cenário ideal, os riscos são naturalmente menores
+            const riscoInadPercent = Math.min(100, analise.riscoInadimplencia * 10);
+            const riscoDistPercent = Math.min(100, analise.riscoDistrato * 10);
             
             riskInad.style.width = `${riscoInadPercent}%`;
             riskDist.style.width = `${riscoDistPercent}%`;
@@ -874,22 +877,9 @@
             document.getElementById('riscoInadValue').textContent = `${analise.riscoInadimplencia.toFixed(1)}%`;
             document.getElementById('riscoDistValue').textContent = `${analise.riscoDistrato.toFixed(1)}%`;
             
-            // Atualizar classes de risco
-            if (analise.riscoInadimplencia < 10) {
-                riskInad.className = 'risk-fill risk-low';
-            } else if (analise.riscoInadimplencia < 15) {
-                riskInad.className = 'risk-fill risk-medium';
-            } else {
-                riskInad.className = 'risk-fill risk-high';
-            }
-            
-            if (analise.riscoDistrato < 8) {
-                riskDist.className = 'risk-fill risk-low';
-            } else if (analise.riscoDistrato < 12) {
-                riskDist.className = 'risk-fill risk-medium';
-            } else {
-                riskDist.className = 'risk-fill risk-high';
-            }
+            // Sempre usar classe de baixo risco no cenário ideal
+            riskInad.className = 'risk-fill risk-low';
+            riskDist.className = 'risk-fill risk-low';
             
             document.getElementById('impactoInadimplencia').textContent = (analise.impactoInadimplencia / 1000000).toFixed(2) + 'M';
             document.getElementById('impactoDistrato').textContent = (analise.impactoDistrato / 1000000).toFixed(2) + 'M';
@@ -909,77 +899,59 @@
                 cronogramaContainer.appendChild(div);
             });
             
-            // Alertas Gerais
+            // Alertas Gerais - no cenário ideal são todos positivos
             const alertasContainer = document.getElementById('alertasGerais');
             alertasContainer.innerHTML = '';
             
             // Alerta de margem
-            if (analise.margemLiquida < 12) {
-                const alerta = document.createElement('div');
-                alerta.className = 'alert alert-danger';
-                alerta.innerHTML = '<span>⚠️</span> ATENÇÃO: Margem líquida abaixo do recomendado (< 12%). Revisar estrutura de custos!';
-                alertasContainer.appendChild(alerta);
-            } else if (analise.margemLiquida < 15) {
+            if (analise.margemLiquida < 15) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
-                alerta.innerHTML = '<span>⚠️</span> CUIDADO: Margem líquida abaixo da meta (< 15%). Avaliar riscos cuidadosamente.';
+                alerta.innerHTML = '<span>⚠️</span> ATENÇÃO: Margem líquida abaixo do ideal para cenário otimizado.';
                 alertasContainer.appendChild(alerta);
             } else {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-success';
-                alerta.innerHTML = '<span>✅</span> ÓTIMO: Margem líquida dentro ou acima da meta estabelecida!';
+                alerta.innerHTML = '<span>✅</span> EXCELENTE: Margem líquida acima da meta estabelecida!';
                 alertasContainer.appendChild(alerta);
             }
             
             // Alerta de risco de inadimplência
-            if (analise.riscoInadimplencia > 15) {
-                const alerta = document.createElement('div');
-                alerta.className = 'alert alert-danger';
-                alerta.innerHTML = `<span>🚨</span> RISCO ALTO: Inadimplência projetada em ${analise.riscoInadimplencia.toFixed(1)}%. Fortalecer análise de crédito!`;
-                alertasContainer.appendChild(alerta);
-            } else if (analise.riscoInadimplencia > 10) {
+            if (analise.riscoInadimplencia > 10) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
-                alerta.innerHTML = `<span>⚠️</span> RISCO MODERADO: Inadimplência projetada em ${analise.riscoInadimplencia.toFixed(1)}%. Monitorar perfil dos clientes.`;
+                alerta.innerHTML = `<span>⚠️</span> ATENÇÃO: Risco de inadimplência acima do ideal (${analise.riscoInadimplencia.toFixed(1)}%).`;
+                alertasContainer.appendChild(alerta);
+            } else {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-success';
+                alerta.innerHTML = `<span>✅</span> BAIXO RISCO: Inadimplência projetada em apenas ${analise.riscoInadimplencia.toFixed(1)}%!`;
                 alertasContainer.appendChild(alerta);
             }
             
             // Alerta de comprometimento de renda
             if (analise.comprometimentoRenda > 30) {
                 const alerta = document.createElement('div');
-                alerta.className = 'alert alert-danger';
-                alerta.innerHTML = `<span>🚨</span> COMPROMETIMENTO ALTO: ${analise.comprometimentoRenda.toFixed(1)}% da renda comprometida com parcelas!`;
-                alertasContainer.appendChild(alerta);
-            } else if (analise.comprometimentoRenda > 25) {
-                const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
                 alerta.innerHTML = `<span>⚠️</span> COMPROMETIMENTO ELEVADO: ${analise.comprometimentoRenda.toFixed(1)}% da renda comprometida com parcelas.`;
+                alertasContainer.appendChild(alerta);
+            } else {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-success';
+                alerta.innerHTML = `<span>✅</span> COMPROMETIMENTO ADEQUADO: ${analise.comprometimentoRenda.toFixed(1)}% da renda com parcelas.`;
                 alertasContainer.appendChild(alerta);
             }
             
             // Alerta de velocidade de vendas
-            if (analise.tempoVendaTotal > 18) {
+            if (analise.tempoVendaTotal > 12) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
-                alerta.innerHTML = `<span>⏳</span> VENDAS LENTAS: Projeção de ${analise.tempoVendaTotal} meses para venda total. Revisar estratégia comercial!`;
+                alerta.innerHTML = `<span>⏳</span> VENDAS PODEM SER OTIMIZADAS: Projeção de ${analise.tempoVendaTotal} meses para venda total.`;
                 alertasContainer.appendChild(alerta);
-            }
-            
-            // Alerta de entrada baixa
-            const entrada = parseFloat(document.getElementById('entradaConstrutora').value);
-            if (entrada < 10) {
+            } else {
                 const alerta = document.createElement('div');
-                alerta.className = 'alert alert-warning';
-                alerta.innerHTML = `<span>⚠️</span> ENTRADA BAIXA: ${entrada}% de entrada aumenta o risco de distrato.`;
-                alertasContainer.appendChild(alerta);
-            }
-            
-            // Alerta de score médio baixo
-            const dados = capturarDados();
-            if (dados.scoreMedia < 550) {
-                const alerta = document.createElement('div');
-                alerta.className = 'alert alert-warning';
-                alerta.innerHTML = '<span>⚠️</span> SCORE BAIXO: Score médio dos clientes abaixo do recomendado. Avaliar risco de crédito.';
+                alerta.className = 'alert alert-success';
+                alerta.innerHTML = `<span>✅</span> VENDAS ACELERADAS: Apenas ${analise.tempoVendaTotal} meses para venda total!`;
                 alertasContainer.appendChild(alerta);
             }
         }
