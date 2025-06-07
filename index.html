@@ -493,6 +493,10 @@
                         <label>Taxa Juros Final (% a.a.)</label>
                         <input type="number" id="taxaJurosFinal" value="5" step="0.1" oninput="calcularEmpreendimento()">
                     </div>
+                    <div class="input-group">
+                        <label>Taxa INCC (% a.a.)</label>
+                        <input type="number" id="taxaINCC" value="5" step="0.1" oninput="calcularEmpreendimento()">
+                    </div>
                 </div>
                 
                 <h3 class="section-title"><i class="fas fa-users"></i> Perfil dos Clientes</h3>
@@ -562,16 +566,30 @@
                         <i class="fas fa-calculator"></i> Análise de Comprometimento de Renda <span class="correction-badge">CORRIGIDO</span>
                     </div>
                     <p style="margin-bottom: 15px; color: #555; font-size: 0.9em;">
-                        <i class="fas fa-info-circle"></i> Cálculo corrigido não considera subsídios nem entrada do Moradia Ceará
+                        <i class="fas fa-info-circle"></i> Cálculo corrigido considerando duas fases: durante a obra (entrada corrigida) e após a obra (financiamento)
                     </p>
                     <div class="kpi-grid">
                         <div class="kpi-card">
-                            <div class="kpi-value" id="parcelaCliente">R$ 1.234</div>
-                            <div class="kpi-label">Parcela do Cliente</div>
+                            <div class="kpi-value" id="parcelaDuranteObra">R$ 1.234</div>
+                            <div class="kpi-label">Parcela Durante Obra</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-value" id="comprometimentoRenda">22.4%</div>
+                            <div class="kpi-value" id="comprometimentoDurante">22.4%</div>
                             <div class="kpi-label">Comprometimento</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="parcelaAposObra">R$ 1.234</div>
+                            <div class="kpi-label">Parcela Após Obra</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="comprometimentoApos">22.4%</div>
+                            <div class="kpi-label">Comprometimento</div>
+                        </div>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-value" id="valorEntradaCorrigida">R$ 34.500</div>
+                            <div class="kpi-label">Entrada Corrigida</div>
                         </div>
                         <div class="kpi-card">
                             <div class="kpi-value" id="valorFinanciado">R$ 195.500</div>
@@ -729,6 +747,7 @@
                 subsidioMedio: parseFloat(document.getElementById('subsidioMedio').value) || 49000,
                 taxaJurosObra: parseFloat(document.getElementById('taxaJurosObra').value) || 11,
                 taxaJurosFinal: parseFloat(document.getElementById('taxaJurosFinal').value) || 5,
+                taxaINCC: parseFloat(document.getElementById('taxaINCC').value) || 5, // Novo campo
                 rendaMedia: parseFloat(document.getElementById('rendaMedia').value) || 5500,
                 percFaixa15: parseFloat(document.getElementById('percFaixa15').value) || 60,
                 percFaixa2: parseFloat(document.getElementById('percFaixa2').value) || 35,
@@ -753,15 +772,29 @@
             // Tempo de venda total (baseado na velocidade de vendas)
             const tempoVenda = Math.min(24, Math.ceil(100 / dados.velocidadeVenda));
             
-            // Cálculo do valor financiado corrigido: apenas desconta a entrada da construtora
-            const entradaConstrutoraValor = (dados.entradaConstrutora / 100) * dados.valorAvaliacao;
-            const valorFinanciado = dados.valorAvaliacao - entradaConstrutoraValor;
+            // 1. Cálculo da entrada construtora corrigida pelo INCC durante a obra
+            const valorEntradaConstrutora = (dados.entradaConstrutora / 100) * dados.valorAvaliacao;
+            const taxaINCCMensal = Math.pow(1 + dados.taxaINCC/100, 1/12) - 1;
+            const entradaCorrigida = valorEntradaConstrutora * Math.pow(1 + taxaINCCMensal, dados.duracaoObra);
             
-            // Cálculo da parcela do cliente (sem considerar subsídios ou entrada Moradia)
-            const parcelaCliente = calcularParcela(valorFinanciado, dados.taxaJurosFinal, dados.prazoEntrada);
+            // 2. Cálculo da parcela durante a obra (juros sobre o saldo devedor da entrada)
+            // Considerando que o saldo devedor da entrada é corrigido mensalmente e amortizado em 'dados.duracaoObra' meses
+            const taxaJurosMensalObra = dados.taxaJurosObra / 100 / 12;
+            const parcelaDuranteObra = (entradaCorrigida * taxaJurosMensalObra) / 
+                                      (1 - Math.pow(1 + taxaJurosMensalObra, -dados.duracaoObra));
             
-            // Comprometimento de renda corrigido
-            const comprometimentoRenda = (parcelaCliente / dados.rendaMedia) * 100;
+            // 3. Cálculo do valor financiado após a obra
+            const valorFinanciado = dados.valorAvaliacao - 
+                                  dados.entradaMoradia - 
+                                  dados.subsidioMedio - 
+                                  entradaCorrigida;
+            
+            // 4. Cálculo da parcela após a obra (financiamento tradicional)
+            const parcelaAposObra = calcularParcela(valorFinanciado, dados.taxaJurosFinal, dados.prazoEntrada);
+            
+            // 5. Comprometimento de renda em cada fase
+            const comprometimentoDuranteObra = (parcelaDuranteObra / dados.rendaMedia) * 100;
+            const comprometimentoAposObra = (parcelaAposObra / dados.rendaMedia) * 100;
             
             // Cronograma de recebimentos (exemplo fixo para demonstração)
             const cronograma = [
@@ -785,14 +818,17 @@
                 unidadesFaixa3,
                 tempoVenda,
                 valorFinanciado,
-                parcelaCliente,
-                comprometimentoRenda,
+                parcelaDuranteObra,
+                parcelaAposObra,
+                comprometimentoDuranteObra,
+                comprometimentoAposObra,
+                entradaCorrigida,
                 cronograma,
                 riscoInad,
                 riscoDist,
                 impactoInadimplencia: vgvTotal * riscoInad / 100 * 0.05, // 5% do valor em risco
                 impactoDistrato: vgvTotal * riscoDist / 100 * 0.1, // 10% do valor em risco
-                totalEntradas: (entradaConstrutoraValor + dados.entradaMoradia) * dados.totalUnidades,
+                totalEntradas: (entradaCorrigida + dados.entradaMoradia) * dados.totalUnidades,
                 totalFinanciamento: valorFinanciado * dados.totalUnidades,
                 totalSubsidios: dados.subsidioMedio * dados.totalUnidades
             };
@@ -811,9 +847,12 @@
             document.getElementById('tempoVenda').textContent = analise.tempoVenda;
             
             // Atualizar comprometimento de renda (corrigido)
+            document.getElementById('parcelaDuranteObra').textContent = formatarMoeda(analise.parcelaDuranteObra);
+            document.getElementById('parcelaAposObra').textContent = formatarMoeda(analise.parcelaAposObra);
+            document.getElementById('comprometimentoDurante').textContent = analise.comprometimentoDuranteObra.toFixed(1) + '%';
+            document.getElementById('comprometimentoApos').textContent = analise.comprometimentoAposObra.toFixed(1) + '%';
+            document.getElementById('valorEntradaCorrigida').textContent = formatarMoeda(analise.entradaCorrigida);
             document.getElementById('valorFinanciado').textContent = formatarMoeda(analise.valorFinanciado);
-            document.getElementById('parcelaCliente').textContent = formatarMoeda(analise.parcelaCliente);
-            document.getElementById('comprometimentoRenda').textContent = analise.comprometimentoRenda.toFixed(1) + '%';
             
             // Atualizar cronograma de recebimentos
             const cronogramaContainer = document.getElementById('cronogramaRecebimentos');
