@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Empreendimento MCMV - Visão Geral</title>
+    <title>Simulador Empreendimento MCMV - Versão Corrigida</title>
     <style>
         * {
             margin: 0;
@@ -13,9 +12,10 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a2a6c 0%, #2c3e50 100%);
             min-height: 100vh;
             padding: 15px;
+            color: #333;
         }
         
         .container {
@@ -23,7 +23,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
             overflow: hidden;
         }
         
@@ -32,12 +32,30 @@
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
         }
         
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 8px;
             font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .version-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #27ae60;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
         }
         
         .main-content {
@@ -52,6 +70,7 @@
             padding: 25px;
             border-radius: 12px;
             border: 2px solid #e9ecef;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         
         .section-title {
@@ -61,6 +80,13 @@
             margin-bottom: 20px;
             border-bottom: 3px solid #3498db;
             padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.2em;
         }
         
         .input-grid {
@@ -68,6 +94,10 @@
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 20px;
+        }
+        
+        .input-group {
+            position: relative;
         }
         
         .input-group label {
@@ -84,12 +114,22 @@
             border: 2px solid #ddd;
             border-radius: 6px;
             font-size: 14px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
         
         .input-group input:focus, .input-group select:focus {
             border-color: #3498db;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .input-group .info-tooltip {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            color: #3498db;
+            cursor: help;
+            font-size: 0.9em;
         }
         
         .btn {
@@ -103,11 +143,17 @@
             font-weight: 600;
             width: 100%;
             margin: 20px 0;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         .btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
         }
         
         .kpi-grid {
@@ -122,8 +168,13 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             border-left: 4px solid #3498db;
+            transition: transform 0.3s;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
         }
         
         .kpi-value {
@@ -144,7 +195,7 @@
             padding: 20px;
             border-radius: 10px;
             margin: 15px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
         
         .chart-title {
@@ -169,6 +220,11 @@
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 8px;
             border-left: 4px solid #3498db;
+            transition: transform 0.2s;
+        }
+        
+        .flow-item:hover {
+            transform: translateX(5px);
         }
         
         .flow-period {
@@ -207,6 +263,13 @@
             font-weight: 600;
             color: #2c3e50;
             margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .risk-value {
+            font-weight: bold;
+            color: #e74c3c;
         }
         
         .risk-meter {
@@ -220,7 +283,7 @@
         .risk-fill {
             height: 100%;
             border-radius: 10px;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
         }
         
         .risk-low { background: linear-gradient(90deg, #27ae60, #2ecc71); }
@@ -232,6 +295,9 @@
             border-radius: 8px;
             margin: 15px 0;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .alert-success {
@@ -269,6 +335,11 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .distribution-item:hover {
+            transform: scale(1.05);
         }
         
         .distribution-value {
@@ -281,6 +352,27 @@
         .distribution-label {
             font-size: 0.8em;
             color: #666;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
         }
         
         /* Responsividade */
@@ -299,12 +391,12 @@
                 grid-template-columns: 1fr;
             }
             
-            .kpi-grid, .distribution-chart {
+            .kpi-grid, .distribution-chart, .risk-analysis {
                 grid-template-columns: 1fr;
             }
             
-            .risk-analysis {
-                grid-template-columns: 1fr;
+            .header h1 {
+                font-size: 2em;
             }
         }
     </style>
@@ -312,8 +404,9 @@
 <body>
     <div class="container">
         <div class="header">
+            <div class="version-badge">Versão Corrigida</div>
             <h1>Simulador Empreendimento MCMV</h1>
-            <p>Análise Completa - 320 Unidades • Ceará • MCMV + Entrada Moradia Ceará</p>
+            <p>Análise Completa com Riscos Dinâmicos • 320 Unidades • Ceará</p>
         </div>
         
         <div class="main-content">
@@ -325,6 +418,7 @@
                     <div class="input-group">
                         <label>Valor Avaliação CEF (R$)</label>
                         <input type="number" id="valorAvaliacao" value="225000">
+                        <span class="info-tooltip" title="Valor de avaliação da unidade pela Caixa Econômica Federal">ℹ️</span>
                     </div>
                     <div class="input-group">
                         <label>Total de Unidades</label>
@@ -383,6 +477,7 @@
                     <div class="input-group">
                         <label>Renda Média Familiar (R$)</label>
                         <input type="number" id="rendaMedia" value="4200">
+                        <span class="info-tooltip" title="Alterar este valor afeta diretamente o risco de inadimplência">⚠️</span>
                     </div>
                     <div class="input-group">
                         <label>% Faixa 1.5 MCMV</label>
@@ -407,6 +502,16 @@
                 </div>
                 
                 <button class="btn" onclick="calcularEmpreendimento()">🚀 Calcular Análise Completa</button>
+                
+                <div class="instructions">
+                    <h3>Instruções para Testar as Correções:</h3>
+                    <ul>
+                        <li><strong>Altere a renda média</strong> (abaixo de R$ 3.000) para ver os riscos aumentarem</li>
+                        <li><strong>Reduza a entrada da construtora</strong> (abaixo de 10%) para ver o risco de distrato aumentar</li>
+                        <li><strong>Aumente a renda</strong> (acima de R$ 6.000) para ver os riscos diminuirem</li>
+                        <li><strong>Teste diferentes combinações</strong> para ver a reação dos indicadores de risco</li>
+                    </ul>
+                </div>
             </div>
             
             <!-- Painel 2: Resultados e Análises -->
@@ -483,14 +588,20 @@
                 
                 <div class="risk-analysis">
                     <div class="risk-card">
-                        <div class="risk-title">Risco de Inadimplência</div>
+                        <div class="risk-title">
+                            <span>Risco de Inadimplência</span>
+                            <span class="risk-value" id="riscoInadValue">55%</span>
+                        </div>
                         <div class="risk-meter">
                             <div class="risk-fill risk-medium" id="riskInadimplencia" style="width: 55%"></div>
                         </div>
                         <div>Impacto: R$ <span id="impactoInadimplencia">1.84M</span></div>
                     </div>
                     <div class="risk-card">
-                        <div class="risk-title">Risco de Distrato</div>
+                        <div class="risk-title">
+                            <span>Risco de Distrato</span>
+                            <span class="risk-value" id="riscoDistValue">33%</span>
+                        </div>
                         <div class="risk-meter">
                             <div class="risk-fill risk-low" id="riskDistrato" style="width: 33%"></div>
                         </div>
@@ -500,10 +611,10 @@
                 
                 <div id="alertasGerais">
                     <div class="alert alert-success">
-                        ✅ ÓTIMO: Margem líquida dentro ou acima da meta estabelecida!
+                        <span>✅</span> ÓTIMO: Margem líquida dentro ou acima da meta estabelecida!
                     </div>
                     <div class="alert alert-warning">
-                        ⚠️ CUIDADO: Risco de inadimplência moderado. Monitorar perfil dos clientes.
+                        <span>⚠️</span> CUIDADO: Risco de inadimplência moderado. Monitorar perfil dos clientes.
                     </div>
                 </div>
                 
@@ -542,6 +653,13 @@
         // Função para formatar valores em milhões
         function formatarMilhoes(valor) {
             return `R$ ${(valor / 1000000).toFixed(2)}M`;
+        }
+        
+        // Função para calcular parcelas de financiamento (NOVA)
+        function calcularParcela(valorFinanciado, taxaAnual, prazoMeses) {
+            const taxaMensal = taxaAnual / 100 / 12;
+            const fator = Math.pow(1 + taxaMensal, prazoMeses);
+            return valorFinanciado * taxaMensal * fator / (fator - 1);
         }
 
         function calcularEmpreendimento() {
@@ -592,26 +710,54 @@
             const totalSubsidios = dados.subsidioMedio * dados.totalUnidades;
             const totalFinanciamento = vgvTotal - totalEntradas - totalSubsidios;
             
-            // Análise de risco
+            // =============================================================================
+            // NOVO CÁLCULO DE RISCO
+            // =============================================================================
+            // Risco base por faixa
             const riscoPorFaixa = {
                 1.5: 8, // Faixa 1.5 tem menor risco
                 2: 12,  // Faixa 2 risco moderado
                 3: 18   // Faixa 3 maior risco
             };
             
-            // Cálculo do risco ponderado
-            const riscoInadimplencia = (
+            // 1. Calcular risco base
+            const riscoBase = (
                 (unidadesFaixa15 * riscoPorFaixa[1.5] + 
                  unidadesFaixa2 * riscoPorFaixa[2] + 
                  unidadesFaixa3 * riscoPorFaixa[3]) / dados.totalUnidades
             );
             
-            // Ajuste baseado no score médio
-            const ajusteScore = dados.scoreMedia < 500 ? 1.4 : dados.scoreMedia > 650 ? 0.8 : 1;
-            const riscoFinal = riscoInadimplencia * ajusteScore;
+            // 2. Calcular parcela do financiamento
+            const valorFinanciado = dados.valorAvaliacao - 
+                                  (dados.valorAvaliacao * dados.entradaConstrutora/100) - 
+                                  dados.entradaMoradia - 
+                                  dados.subsidioMedio;
             
-            // Risco de distrato (geralmente menor que inadimplência)
+            const parcela = calcularParcela(valorFinanciado, dados.taxaJurosFinal, dados.prazoEntrada);
+            
+            // 3. Calcular comprometimento da renda
+            const comprometimentoRenda = (parcela / dados.rendaMedia) * 100;
+            
+            // 4. Ajustar risco com base na renda
+            let ajusteRenda = 1;
+            if (comprometimentoRenda > 30) ajusteRenda = 1.7; // Alto comprometimento
+            else if (comprometimentoRenda > 20) ajusteRenda = 1.3; // Médio comprometimento
+            else ajusteRenda = 0.9; // Baixo comprometimento
+            
+            // 5. Ajustar risco com base na entrada
+            const ajusteEntrada = dados.entradaConstrutora < 10 ? 1.4 : 0.85;
+            
+            // 6. Ajuste de score
+            const ajusteScore = dados.scoreMedia < 500 ? 1.4 : dados.scoreMedia > 650 ? 0.8 : 1;
+            
+            // 7. Risco final combinado
+            const riscoFinal = riscoBase * ajusteScore * ajusteRenda * ajusteEntrada;
+            
+            // 8. Risco de distrato (geralmente menor que inadimplência)
             const riscoDistrato = riscoFinal * 0.6;
+            // =============================================================================
+            // FIM DO NOVO CÁLCULO
+            // =============================================================================
             
             // Impactos financeiros
             const impactoInadimplencia = totalFinanciamento * (riscoFinal / 100);
@@ -650,7 +796,9 @@
                 riscoDistrato,
                 impactoInadimplencia,
                 impactoDistrato,
-                cronograma
+                cronograma,
+                comprometimentoRenda,
+                parcelaMensal: parcela
             };
         }
         
@@ -716,9 +864,17 @@
             const riskInad = document.getElementById('riskInadimplencia');
             const riskDist = document.getElementById('riskDistrato');
             
-            riskInad.style.width = `${Math.min(100, analise.riscoInadimplencia * 5)}%`;
-            riskDist.style.width = `${Math.min(100, analise.riscoDistrato * 5)}%`;
+            const riscoInadPercent = Math.min(100, analise.riscoInadimplencia * 5);
+            const riscoDistPercent = Math.min(100, analise.riscoDistrato * 5);
             
+            riskInad.style.width = `${riscoInadPercent}%`;
+            riskDist.style.width = `${riscoDistPercent}%`;
+            
+            // Exibir valores de risco
+            document.getElementById('riscoInadValue').textContent = `${analise.riscoInadimplencia.toFixed(1)}%`;
+            document.getElementById('riscoDistValue').textContent = `${analise.riscoDistrato.toFixed(1)}%`;
+            
+            // Atualizar classes de risco
             if (analise.riscoInadimplencia < 10) {
                 riskInad.className = 'risk-fill risk-low';
             } else if (analise.riscoInadimplencia < 15) {
@@ -761,17 +917,17 @@
             if (analise.margemLiquida < 12) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-danger';
-                alerta.innerHTML = '⚠️ ATENÇÃO: Margem líquida abaixo do recomendado (< 12%). Revisar estrutura de custos!';
+                alerta.innerHTML = '<span>⚠️</span> ATENÇÃO: Margem líquida abaixo do recomendado (< 12%). Revisar estrutura de custos!';
                 alertasContainer.appendChild(alerta);
             } else if (analise.margemLiquida < 15) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
-                alerta.innerHTML = '⚠️ CUIDADO: Margem líquida abaixo da meta (< 15%). Avaliar riscos cuidadosamente.';
+                alerta.innerHTML = '<span>⚠️</span> CUIDADO: Margem líquida abaixo da meta (< 15%). Avaliar riscos cuidadosamente.';
                 alertasContainer.appendChild(alerta);
             } else {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-success';
-                alerta.innerHTML = '✅ ÓTIMO: Margem líquida dentro ou acima da meta estabelecida!';
+                alerta.innerHTML = '<span>✅</span> ÓTIMO: Margem líquida dentro ou acima da meta estabelecida!';
                 alertasContainer.appendChild(alerta);
             }
             
@@ -779,12 +935,25 @@
             if (analise.riscoInadimplencia > 15) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-danger';
-                alerta.innerHTML = `🚨 RISCO ALTO: Inadimplência projetada em ${analise.riscoInadimplencia.toFixed(1)}%. Fortalecer análise de crédito!`;
+                alerta.innerHTML = `<span>🚨</span> RISCO ALTO: Inadimplência projetada em ${analise.riscoInadimplencia.toFixed(1)}%. Fortalecer análise de crédito!`;
                 alertasContainer.appendChild(alerta);
             } else if (analise.riscoInadimplencia > 10) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
-                alerta.innerHTML = `⚠️ RISCO MODERADO: Inadimplência projetada em ${analise.riscoInadimplencia.toFixed(1)}%. Monitorar perfil dos clientes.`;
+                alerta.innerHTML = `<span>⚠️</span> RISCO MODERADO: Inadimplência projetada em ${analise.riscoInadimplencia.toFixed(1)}%. Monitorar perfil dos clientes.`;
+                alertasContainer.appendChild(alerta);
+            }
+            
+            // Alerta de comprometimento de renda
+            if (analise.comprometimentoRenda > 30) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-danger';
+                alerta.innerHTML = `<span>🚨</span> COMPROMETIMENTO ALTO: ${analise.comprometimentoRenda.toFixed(1)}% da renda comprometida com parcelas!`;
+                alertasContainer.appendChild(alerta);
+            } else if (analise.comprometimentoRenda > 25) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-warning';
+                alerta.innerHTML = `<span>⚠️</span> COMPROMETIMENTO ELEVADO: ${analise.comprometimentoRenda.toFixed(1)}% da renda comprometida com parcelas.`;
                 alertasContainer.appendChild(alerta);
             }
             
@@ -792,7 +961,16 @@
             if (analise.tempoVendaTotal > 18) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
-                alerta.innerHTML = `⏳ VENDAS LENTAS: Projeção de ${analise.tempoVendaTotal} meses para venda total. Revisar estratégia comercial!`;
+                alerta.innerHTML = `<span>⏳</span> VENDAS LENTAS: Projeção de ${analise.tempoVendaTotal} meses para venda total. Revisar estratégia comercial!`;
+                alertasContainer.appendChild(alerta);
+            }
+            
+            // Alerta de entrada baixa
+            const entrada = parseFloat(document.getElementById('entradaConstrutora').value);
+            if (entrada < 10) {
+                const alerta = document.createElement('div');
+                alerta.className = 'alert alert-warning';
+                alerta.innerHTML = `<span>⚠️</span> ENTRADA BAIXA: ${entrada}% de entrada aumenta o risco de distrato.`;
                 alertasContainer.appendChild(alerta);
             }
             
@@ -801,7 +979,7 @@
             if (dados.scoreMedia < 550) {
                 const alerta = document.createElement('div');
                 alerta.className = 'alert alert-warning';
-                alerta.innerHTML = '⚠️ SCORE BAIXO: Score médio dos clientes abaixo do recomendado. Avaliar risco de crédito.';
+                alerta.innerHTML = '<span>⚠️</span> SCORE BAIXO: Score médio dos clientes abaixo do recomendado. Avaliar risco de crédito.';
                 alertasContainer.appendChild(alerta);
             }
         }
